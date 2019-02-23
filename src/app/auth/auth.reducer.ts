@@ -1,8 +1,6 @@
 
-
 import * as fromAuth from './auth.actions';
 import { User } from './user.model';
-
 
 export interface AuthState {
   user: User;
@@ -19,6 +17,11 @@ export function authReducer( state = estadoInicial, action: fromAuth.actions ): 
     case fromAuth.SET_USER:
       return {
         user: { ...action.user }
+      };
+
+    case fromAuth.UNSET_USER:
+      return {
+        user: null
       };
 
     default:

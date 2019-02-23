@@ -14,13 +14,15 @@ import { User } from './user.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducer';
 import { ActivarLoadingAction, DesactivarLoadingAction } from '../shared/ui.actions';
-import { SetUserAction } from './auth.actions';
+import { SetUserAction, UnsetUserAction } from './auth.actions';
 import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
+
 
   private userSubscription: Subscription = new Subscription();
   private usuario: User;
@@ -44,8 +46,9 @@ export class AuthService {
 
               const newUser = new User( usuarioObj );
               this.store.dispatch( new SetUserAction( newUser ));
+              this.usuario = newUser;
 
-              console.log(newUser);
+              // console.log(newUser);
             });
       } else {
         // Para evitar tirar tener
@@ -101,13 +104,15 @@ export class AuthService {
         this.store.dispatch( new DesactivarLoadingAction() );
         Swal.fire('Error en el login', error.message, 'error');
     });
-  }
+    }
 
   logout() {
     this.afAuth.auth.signOut()
     .then( () => {
       Swal.fire('Logout', 'Ha cerrado sesión correctamente', 'info');
       this.router.navigate(['/login']);
+
+      this.store.dispatch( new UnsetUserAction());
     });
   }
 
@@ -123,5 +128,9 @@ export class AuthService {
           return fbUser != null;
         })
       );
+  }
+
+  getUsuario() {
+    return { ...this.usuario };
   }
 }

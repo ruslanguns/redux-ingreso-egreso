@@ -23,7 +23,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.subscription = this.store.select('ui')
+    this.subscription = this.store
+                            .select('ui')
                             .subscribe( ui => this.cargando = ui.isLoading );
   }
 
